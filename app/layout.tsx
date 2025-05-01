@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { NetworkBackground } from "@/components/3d-network-background" // <-- import added
+import { NetworkBackground } from "@/components/3d-network-background"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,8 +27,16 @@ export default function RootLayout({
       <head />
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <NetworkBackground /> {/* <-- background added here */}
-          {children}
+          {/* Mesh background (fixed + behind everything) */}
+          <NetworkBackground />
+
+          {/* Gradient overlay to soften mesh (fixed + behind content) */}
+          <div className="fixed inset-0 bg-gradient-to-b from-transparent via-background/60 to-background/90 pointer-events-none z-0" />
+
+          {/* Main content (above both mesh + gradient) */}
+          <div className="relative z-10">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

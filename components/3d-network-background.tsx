@@ -2,21 +2,21 @@
 
 import { Canvas } from "@react-three/fiber"
 import { useTheme } from "next-themes"
-import { Suspense, useMemo, useEffect, useState } from "react"
+import { Suspense, useEffect, useState, useMemo } from "react"
 import { MeshDistortMaterial } from "@react-three/drei"
 
 export function NetworkBackground() {
   const { theme } = useTheme()
   const [isClient, setIsClient] = useState(false)
 
-  // Ensure component only renders on client (avoid SSR mismatch)
+  // Ensure component only runs on client (avoid SSR mismatch)
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // Monotone color that fits both dark & light theme
+  // Monotone mesh color that fits both themes subtly
   const meshColor = useMemo(() => {
-    return theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"
+    return theme === "dark" ? "#ffffff15" : "#00000015" // ~8% opacity white/black
   }, [theme])
 
   if (!isClient) return null
@@ -31,6 +31,7 @@ export function NetworkBackground() {
         height: "100vh",
         zIndex: -1,
         pointerEvents: "none",
+        filter: "blur(1px)", // subtle blur to soften mesh
       }}
     >
       <Canvas
@@ -53,8 +54,9 @@ export function NetworkBackground() {
 }
 
 function RotatingMesh({ color }: { color: string }) {
+  // Slight continuous rotation effect
   return (
-    <mesh rotation={[0.3, 0.3, 0.0]}>
+    <mesh rotation={[0.3, 0.3, 0]}>
       <icosahedronGeometry args={[1.5, 2]} />
       <MeshDistortMaterial
         color={color}
@@ -62,7 +64,7 @@ function RotatingMesh({ color }: { color: string }) {
         distort={0.4}
         speed={1.5}
         transparent
-        opacity={0.6}
+        opacity={0.6} // soft opacity
       />
     </mesh>
   )
