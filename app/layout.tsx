@@ -30,10 +30,7 @@ export default function RootLayout({
           {/* Mesh background (fixed + behind everything) */}
           <NetworkBackground />
 
-          {/* Gradient overlay to soften mesh (fixed + behind content) */}
-          <div className="fixed inset-0 bg-gradient-to-b from-transparent via-background/60 to-background/90 pointer-events-none z-0" />
-
-          {/* Main content (above both mesh + gradient) */}
+          {/* Main content (above mesh) */}
           <div className="relative z-10">
             {children}
           </div>
