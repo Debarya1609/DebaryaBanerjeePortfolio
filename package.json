@@ -58,8 +58,16 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
+    "expo": "latest",
+    "expo-asset": "latest",
+    "expo-file-system": "latest",
+    "expo-gl": "latest",
+    "react-native": "latest",
+    "three": "latest",
+    "@react-three/fiber": "latest",
     "@emotion/is-prop-valid": "latest",
     "gsap": "latest",
+    "@react-three/drei": "latest",
     "framer-motion": "latest"
   },
   "devDependencies": {
