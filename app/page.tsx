@@ -371,7 +371,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                    <p className="text-gray-800 dark:text-gray-200">debarya@example.com</p>
+                    <p className="text-gray-800 dark:text-gray-200">debaryab@example.com</p>
                   </div>
                 </div>
 
@@ -395,7 +395,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Location</p>
-                    <p className="text-gray-800 dark:text-gray-200">San Francisco, CA</p>
+                    <p className="text-gray-800 dark:text-gray-200">Howrah, West Bengal, India</p>
                   </div>
                 </div>
               </div>

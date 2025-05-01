@@ -111,18 +111,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </Link>
           </Button>
         </div>
-
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="w-full text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400"
-        >
-          <Link href={`/projects/${project.id}`} className="flex items-center justify-center gap-1">
-            Use as template
-            <ChevronRight className="h-3 w-3" />
-          </Link>
-        </Button>
       </div>
     </motion.div>
   )
