@@ -13,6 +13,7 @@ import { NetworkBackground } from "@/components/3d-network-background"
 import { JourneyPath } from "@/components/journey-path"
 import { ScrollProgress } from "@/components/scroll-progress"
 import { motion } from "framer-motion"
+import ContactForm from "@/components/contact-form"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -447,47 +448,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/20 dark:border-purple-900/20 shadow-lg hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300">
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
-                    placeholder="Your name"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
-                    placeholder="Your message..."
-                  ></textarea>
-                </div>
-
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 border-0 shadow-lg hover:shadow-xl hover:shadow-purple-500/20">
-                  Send Message
-                </Button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>

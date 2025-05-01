@@ -1,101 +1,96 @@
-"use client"
+'use client';
 
-import { useState, useRef } from "react"
-import emailjs from "@emailjs/browser"
-import ReCAPTCHA from "react-google-recaptcha"
+import { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-export function ContactForm() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" })
-  const [status, setStatus] = useState("")
-  const [isVerified, setIsVerified] = useState(false)
+export default function ContactForm() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  const recaptchaRef = useRef<ReCAPTCHA>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  // ✅ Replace with your own keys
+  const EMAILJS_SERVICE_ID = 'service_hs9apxh';
+  const EMAILJS_TEMPLATE_ID = 'template_tdm6pdf';
+  const EMAILJS_PUBLIC_KEY = 'ZS5SOb-nRidPdIHGM';
+  const RECAPTCHA_SITE_KEY = '6LeKpSorAAAAALC9BrGws1kLfq4OTD4Gk1v7RFEP';
 
-  const handleCaptchaChange = (token: string | null) => {
-    if (token) {
-      setIsVerified(true)
-    } else {
-      setIsVerified(false)
-    }
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!isVerified) {
-      setStatus("❌ Please complete the reCAPTCHA")
-      return
+    const recaptchaValue = recaptchaRef.current?.getValue();
+    if (!recaptchaValue) {
+      setStatusMessage('Please complete the reCAPTCHA');
+      return;
     }
 
-    // Replace these with your actual IDs
-    const serviceID = "service_hs9apxh"
-    const templateID = "template_tdm6pdf"
-    const publicKey = "YZS5SOb-nRidPdIHGM"
+    if (!formRef.current) return;
+
+    setIsSubmitting(true);
+    setStatusMessage(null);
 
     emailjs
-      .send(serviceID, templateID, form, publicKey)
-      .then(
-        () => {
-          setStatus("✅ Message sent successfully!")
-          setForm({ name: "", email: "", message: "" })
-          recaptchaRef.current?.reset()
-          setIsVerified(false)
-        },
-        () => {
-          setStatus("❌ Failed to send. Please try again.")
-        }
+      .sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
       )
-  }
+      .then(() => {
+        setStatusMessage('Message sent successfully!');
+        formRef.current?.reset();
+        recaptchaRef.current?.reset();
+      })
+      .catch(() => {
+        setStatusMessage('Failed to send message. Please try again later.');
+      })
+      .finally(() => setIsSubmitting(false));
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 max-w-md">
       <input
         type="text"
         name="name"
         placeholder="Your Name"
-        value={form.name}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
         required
+        className="w-full p-2 border rounded"
       />
       <input
         type="email"
         name="email"
         placeholder="Your Email"
-        value={form.email}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
         required
+        className="w-full p-2 border rounded"
       />
       <textarea
         name="message"
         placeholder="Your Message"
-        value={form.message}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-        rows={4}
         required
+        rows={5}
+        className="w-full p-2 border rounded"
       />
 
       <ReCAPTCHA
-        sitekey="6LeKpSorAAAAALC9BrGws1kLfq4OTD4Gk1v7RFEP"
-        onChange={handleCaptchaChange}
         ref={recaptchaRef}
+        sitekey="6LeKpSorAAAAALC9BrGws1kLfq4OTD4Gk1v7RFEP"
       />
 
       <button
         type="submit"
-        className="bg-black text-white py-2 px-4 rounded disabled:opacity-50"
-        disabled={!isVerified}
+        disabled={isSubmitting}
+        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
       >
-        Send
+        {isSubmitting ? 'Sending...' : 'Send Message'}
       </button>
 
-      {status && <p className="text-sm mt-2">{status}</p>}
+      {statusMessage && (
+        <p className="text-center mt-2 text-sm text-gray-700">
+          {statusMessage}
+        </p>
+      )}
     </form>
-  )
+  );
 }
