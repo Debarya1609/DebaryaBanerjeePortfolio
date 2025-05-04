@@ -16,6 +16,7 @@ import { motion } from "framer-motion"
 import ContactForm from "@/components/contact-form"
 import { MobileMenu } from "@/components/mobile-menu"
 import { useSmoothScroll } from "@/hooks/use-smooth-scroll"
+import { useMobile } from "@/hooks/use-mobile"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -97,6 +98,7 @@ export default function Home() {
   const mainRef = useRef<HTMLDivElement>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { scrollToSection } = useSmoothScroll()
+  const isMobile = useMobile()
 
   // Handle theme toggle
   const toggleTheme = () => {
@@ -283,7 +285,15 @@ export default function Home() {
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 border-0 shadow-lg hover:shadow-xl hover:shadow-purple-500/20"
               >
-                <Link href="#journey">Explore My Journey</Link>
+                <Link
+                  href="#journey"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToSection("journey")
+                  }}
+                >
+                  Explore My Journey
+                </Link>
               </Button>
 
               <Button
@@ -292,7 +302,14 @@ export default function Home() {
                 size="lg"
                 className="border-blue-500 dark:border-purple-500 text-blue-600 dark:text-purple-400 hover:shadow-lg hover:shadow-blue-500/20"
               >
-                <Link href="#contact" className="flex items-center gap-2">
+                <Link
+                  href="#contact"
+                  className="flex items-center gap-2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToSection("contact")
+                  }}
+                >
                   <Mail className="h-4 w-4" />
                   Get in Touch
                 </Link>
@@ -350,7 +367,7 @@ export default function Home() {
       <section id="journey" className="relative py-24 px-4">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-white-300 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
+            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-blue-700 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
               MY PROJECTS
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400">
@@ -373,7 +390,7 @@ export default function Home() {
       <section id="contact" className="relative py-24 px-4">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-white-300 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
+            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-blue-700 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
               GET IN TOUCH
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400">
