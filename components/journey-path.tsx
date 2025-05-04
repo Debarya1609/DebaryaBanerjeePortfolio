@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ProjectCard } from "./project-card"
-import { useMobile } from "@/hooks/use-mobile"
-import { MobileJourneyPath } from "./mobile-journey-path"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -29,14 +27,6 @@ interface JourneyPathProps {
 }
 
 export function JourneyPath({ projects }: JourneyPathProps) {
-  const isMobile = useMobile()
-
-  // Render mobile version for small screens
-  if (isMobile) {
-    return <MobileJourneyPath projects={projects} />
-  }
-
-  // Desktop version below - unchanged
   const pathRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -44,9 +34,6 @@ export function JourneyPath({ projects }: JourneyPathProps) {
 
   useEffect(() => {
     if (!pathRef.current || !dotRef.current || !containerRef.current) return
-
-    // Clear any existing ScrollTrigger instances to prevent duplicates
-    ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
 
     // Set up the journey path animation
     const pathHeight = containerRef.current.offsetHeight
