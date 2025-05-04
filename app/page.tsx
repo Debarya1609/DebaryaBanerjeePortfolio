@@ -373,7 +373,7 @@ export default function Home() {
       <section id="contact" className="relative py-24 px-4">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-blue-700 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
+            <Badge className="mb-4 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-white-300 dark:text-purple-300 border border-blue-200 dark:border-purple-800">
               GET IN TOUCH
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400">
