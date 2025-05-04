@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ProjectCard } from "./project-card"
-import { useMobile } from "@/hooks/use-mobile"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -31,15 +30,10 @@ export function JourneyPath({ projects }: JourneyPathProps) {
   const pathRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [activeProject, setActiveProject] = useState<number | null>(null)
-  const isMobile = useMobile()
 
   useEffect(() => {
     if (!pathRef.current || !dotRef.current || !containerRef.current) return
-
-    // Clear any existing ScrollTrigger instances to prevent duplicates
-    ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
 
     // Set up the journey path animation
     const pathHeight = containerRef.current.offsetHeight
@@ -68,7 +62,7 @@ export function JourneyPath({ projects }: JourneyPathProps) {
           branchEl,
           { width: 0 },
           {
-            width: isMobile ? "80px" : "120px",
+            width: "120px",
             duration: 1,
             scrollTrigger: {
               trigger: branchEl,
@@ -101,7 +95,7 @@ export function JourneyPath({ projects }: JourneyPathProps) {
         )
       }
     })
-  }, [projects, isMobile])
+  }, [projects])
 
   const handleProjectHover = (projectId: number, isEnter: boolean) => {
     setActiveProject(isEnter ? projectId : null)
@@ -127,94 +121,52 @@ export function JourneyPath({ projects }: JourneyPathProps) {
 
   return (
     <div ref={containerRef} className="relative min-h-[200vh]">
-      {/* Horizontal scroll container for mobile */}
+      {/* Main vertical path */}
       <div
-        ref={scrollContainerRef}
-        className={`
-          ${isMobile ? "overflow-x-auto overflow-y-hidden pb-8 -mx-4 px-4" : ""}
-          relative w-full h-full
-        `}
-        style={{
-          scrollbarWidth: "none", // Firefox
-          msOverflowStyle: "none", // IE/Edge
-        }}
-      >
-        {/* Hide scrollbar for Chrome/Safari */}
-        <style jsx global>{`
-          .overflow-x-auto::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
+        ref={pathRef}
+        className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-400 via-purple-500 to-blue-400 dark:from-blue-500 dark:via-purple-600 dark:to-blue-500"
+      />
 
-        {/* Content container with minimum width on mobile */}
-        <div className={`relative ${isMobile ? "min-w-[150vw]" : "w-full"} h-full`}>
-          {/* Main vertical path */}
+      {/* Moving dot */}
+      <div
+        ref={dotRef}
+        className="absolute left-1/2 top-0 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-white shadow-[0_0_10px_rgba(147,51,234,0.7)] dark:shadow-[0_0_15px_rgba(168,85,247,0.7)] z-10 transition-all duration-300"
+      />
+
+      {/* Project branches and cards */}
+      {projects.map((project) => (
+        <div
+          key={project.id}
+          className="absolute left-1/2 transform -translate-x-1/2"
+          style={{ top: `${project.position}%` }}
+        >
+          {/* Branch line */}
           <div
-            ref={pathRef}
-            className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-400 via-purple-500 to-blue-400 dark:from-blue-500 dark:via-purple-600 dark:to-blue-500"
+            id={`branch-${project.id}`}
+            className={`absolute top-0 h-1 bg-gradient-to-r cursor-pointer transition-all duration-300 ${
+              project.side === "left"
+                ? "right-0 from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400"
+                : "left-0 from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-400"
+            } shadow-[0_0_5px_rgba(147,51,234,0.3)] dark:shadow-[0_0_10px_rgba(168,85,247,0.3)]`}
+            style={{
+              width: "120px",
+              [project.side === "left" ? "right" : "left"]: "0px",
+            }}
+            onMouseEnter={() => handleProjectHover(project.id, true)}
+            onMouseLeave={() => handleProjectHover(project.id, false)}
           />
 
-          {/* Moving dot */}
+          {/* Project card */}
           <div
-            ref={dotRef}
-            className="absolute left-1/2 top-0 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-white shadow-[0_0_10px_rgba(147,51,234,0.7)] dark:shadow-[0_0_15px_rgba(168,85,247,0.7)] z-10 transition-all duration-300"
-          />
-
-          {/* Project branches and cards */}
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="absolute left-1/2 transform -translate-x-1/2"
-              style={{ top: `${project.position}%` }}
-            >
-              {/* Branch line */}
-              <div
-                id={`branch-${project.id}`}
-                className={`absolute top-0 h-1 bg-gradient-to-r cursor-pointer transition-all duration-300 ${
-                  project.side === "left"
-                    ? "right-0 from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400"
-                    : "left-0 from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-400"
-                } shadow-[0_0_5px_rgba(147,51,234,0.3)] dark:shadow-[0_0_10px_rgba(168,85,247,0.3)]`}
-                style={{
-                  width: isMobile ? "80px" : "120px",
-                  [project.side === "left" ? "right" : "left"]: "0px",
-                }}
-                onMouseEnter={() => handleProjectHover(project.id, true)}
-                onMouseLeave={() => handleProjectHover(project.id, false)}
-                onTouchStart={() => handleProjectHover(project.id, true)}
-                onTouchEnd={() => handleProjectHover(project.id, false)}
-              />
-
-              {/* Project card */}
-              <div
-                id={`project-${project.id}`}
-                className={`absolute ${isMobile ? "top-[-60px]" : "top-[-80px]"} ${
-                  project.side === "left"
-                    ? isMobile
-                      ? "right-[90px]"
-                      : "right-[140px]"
-                    : isMobile
-                      ? "left-[90px]"
-                      : "left-[140px]"
-                }`}
-                onMouseEnter={() => handleProjectHover(project.id, true)}
-                onMouseLeave={() => handleProjectHover(project.id, false)}
-                onTouchStart={() => handleProjectHover(project.id, true)}
-                onTouchEnd={() => handleProjectHover(project.id, false)}
-              >
-                <ProjectCard project={project} />
-              </div>
-            </div>
-          ))}
+            id={`project-${project.id}`}
+            className={`absolute top-[-80px] ${project.side === "left" ? "right-[140px]" : "left-[140px]"}`}
+            onMouseEnter={() => handleProjectHover(project.id, true)}
+            onMouseLeave={() => handleProjectHover(project.id, false)}
+          >
+            <ProjectCard project={project} />
+          </div>
         </div>
-      </div>
-
-      {/* Mobile scroll indicator */}
-      {isMobile && (
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center items-center py-2 text-xs text-gray-500 dark:text-gray-400 animate-pulse">
-          <span>← Swipe to explore →</span>
-        </div>
-      )}
+      ))}
     </div>
   )
 }

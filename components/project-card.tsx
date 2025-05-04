@@ -3,11 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Github, ExternalLink } from "lucide-react"
+import { Github, ExternalLink, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
-import { useMobile } from "@/hooks/use-mobile"
 
 interface Project {
   id: number
@@ -27,11 +26,10 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false)
-  const isMobile = useMobile()
 
   return (
     <motion.div
-      className={`${isMobile ? "w-56" : "w-64 md:w-72"} bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-200/20 dark:border-purple-900/20 shadow-lg transition-all duration-300`}
+      className="w-64 md:w-72 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-200/20 dark:border-purple-900/20 shadow-lg transition-all duration-300"
       whileHover={{
         scale: 1.05,
         boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
@@ -52,19 +50,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 p-3">
-          <h3 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-white drop-shadow-md`}>
-            {project.title}
-          </h3>
+          <h3 className="text-lg font-bold text-white drop-shadow-md">{project.title}</h3>
         </div>
       </div>
 
       <div className="p-4 space-y-3">
-        <p className={`${isMobile ? "text-xs" : "text-sm"} text-gray-600 dark:text-gray-300 line-clamp-2`}>
-          {project.description}
-        </p>
+        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">{project.description}</p>
 
         <div className="flex flex-wrap gap-1">
-          {project.technologies.slice(0, isMobile ? 2 : 3).map((tech, index) => (
+          {project.technologies.slice(0, 3).map((tech, index) => (
             <Badge
               key={index}
               variant="outline"
@@ -73,12 +67,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {tech}
             </Badge>
           ))}
-          {project.technologies.length > (isMobile ? 2 : 3) && (
+          {project.technologies.length > 3 && (
             <Badge
               variant="outline"
               className="text-xs bg-purple-100/30 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300"
             >
-              +{project.technologies.length - (isMobile ? 2 : 3)}
+              +{project.technologies.length - 3}
             </Badge>
           )}
         </div>
@@ -87,7 +81,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <Button
             asChild
             variant="outline"
-            size={isMobile ? "sm" : "sm"}
+            size="sm"
             className="flex-1 border-blue-500 dark:border-purple-500 text-blue-600 dark:text-purple-400 hover:shadow-[0_0_10px_rgba(147,51,234,0.5)]"
           >
             <Link
@@ -96,14 +90,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
               rel="noreferrer"
               className="flex items-center justify-center gap-1"
             >
-              <Github className={`${isMobile ? "h-3 w-3" : "h-3 w-3"}`} />
-              <span className={isMobile ? "text-xs" : ""}>Code</span>
+              <Github className="h-3 w-3" />
+              Code
             </Link>
           </Button>
 
           <Button
             asChild
-            size={isMobile ? "sm" : "sm"}
+            size="sm"
             className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 border-0 hover:shadow-[0_0_15px_rgba(147,51,234,0.7)]"
           >
             <Link
@@ -112,8 +106,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
               rel="noreferrer"
               className="flex items-center justify-center gap-1"
             >
-              <ExternalLink className={`${isMobile ? "h-3 w-3" : "h-3 w-3"}`} />
-              <span className={isMobile ? "text-xs" : ""}>View</span>
+              <ExternalLink className="h-3 w-3" />
+              View
             </Link>
           </Button>
         </div>

@@ -68,9 +68,9 @@
     "@emotion/is-prop-valid": "latest",
     "gsap": "latest",
     "@react-three/drei": "latest",
+    "framer-motion": "latest",
     "@emailjs/browser": "latest",
     "react-google-recaptcha": "latest",
-    "framer-motion": "latest",
     "@headlessui/react": "latest",
     "@heroicons/react": "latest"
   },

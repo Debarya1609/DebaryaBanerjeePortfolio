@@ -32,11 +32,7 @@ export function MobileMenu(props: MobileMenuProps) {
           >
             Debarya Banerjee
           </Link>
-          <button
-            type="button"
-            onClick={onClose}
-            className="-m-2.5 rounded-md p-2.5 text-gray-300 hover:text-white transition"
-          >
+          <button type="button" onClick={onClose} className="-m-2.5 rounded-md p-2.5 text-gray-300 hover:text-white transition">
             <span className="sr-only">Close menu</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
