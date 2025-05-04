@@ -14,6 +14,8 @@ import { JourneyPath } from "@/components/journey-path"
 import { ScrollProgress } from "@/components/scroll-progress"
 import { motion } from "framer-motion"
 import ContactForm from "@/components/contact-form"
+import { MobileMenu } from "@/components/mobile-menu"
+import { useSmoothScroll } from "@/hooks/use-smooth-scroll"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -93,6 +95,8 @@ export default function Home() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const mainRef = useRef<HTMLDivElement>(null)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { scrollToSection } = useSmoothScroll()
 
   // Handle theme toggle
   const toggleTheme = () => {
@@ -171,12 +175,20 @@ export default function Home() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="#journey"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("journey")
+              }}
               className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
             >
               Journey
             </Link>
             <Link
               href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("contact")
+              }}
               className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
             >
               Contact
@@ -187,7 +199,13 @@ export default function Home() {
             </Button>
           </nav>
 
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open menu"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -206,6 +224,14 @@ export default function Home() {
           </Button>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        toggleTheme={toggleTheme}
+        scrollToSection={scrollToSection}
+      />
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-16 px-4">

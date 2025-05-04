@@ -70,7 +70,9 @@
     "@react-three/drei": "latest",
     "framer-motion": "latest",
     "@emailjs/browser": "latest",
-    "react-google-recaptcha": "latest"
+    "react-google-recaptcha": "latest",
+    "@headlessui/react": "latest",
+    "@heroicons/react": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
