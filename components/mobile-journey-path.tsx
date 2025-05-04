@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ProjectCard } from "./project-card"
-import { useMobile } from "@/hooks/use-mobile"
-import { MobileJourneyPath } from "./mobile-journey-path"
+import { MobileProjectCard } from "./mobile-project-card"
+import { ChevronRight, ChevronLeft } from "lucide-react"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -24,23 +23,16 @@ interface Project {
   side: "left" | "right"
 }
 
-interface JourneyPathProps {
+interface MobileJourneyPathProps {
   projects: Project[]
 }
 
-export function JourneyPath({ projects }: JourneyPathProps) {
-  const isMobile = useMobile()
-
-  // Render mobile version for small screens
-  if (isMobile) {
-    return <MobileJourneyPath projects={projects} />
-  }
-
-  // Desktop version below - unchanged
+export function MobileJourneyPath({ projects }: MobileJourneyPathProps) {
   const pathRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeProject, setActiveProject] = useState<number | null>(null)
+  const [showScrollHint, setShowScrollHint] = useState(true)
 
   useEffect(() => {
     if (!pathRef.current || !dotRef.current || !containerRef.current) return
@@ -65,8 +57,8 @@ export function JourneyPath({ projects }: JourneyPathProps) {
 
     // Animate each project branch and card
     projects.forEach((project) => {
-      const projectId = `project-${project.id}`
-      const branchEl = document.getElementById(`branch-${project.id}`)
+      const projectId = `mobile-project-${project.id}`
+      const branchEl = document.getElementById(`mobile-branch-${project.id}`)
       const cardEl = document.getElementById(projectId)
 
       if (branchEl && cardEl) {
@@ -75,7 +67,7 @@ export function JourneyPath({ projects }: JourneyPathProps) {
           branchEl,
           { width: 0 },
           {
-            width: "120px",
+            width: "60px",
             duration: 1,
             scrollTrigger: {
               trigger: branchEl,
@@ -90,7 +82,7 @@ export function JourneyPath({ projects }: JourneyPathProps) {
           cardEl,
           {
             opacity: 0,
-            x: project.side === "left" ? 50 : -50,
+            x: project.side === "left" ? 30 : -30,
             scale: 0.8,
           },
           {
@@ -108,12 +100,19 @@ export function JourneyPath({ projects }: JourneyPathProps) {
         )
       }
     })
+
+    // Hide scroll hint after 5 seconds
+    const timer = setTimeout(() => {
+      setShowScrollHint(false)
+    }, 5000)
+
+    return () => clearTimeout(timer)
   }, [projects])
 
-  const handleProjectHover = (projectId: number, isEnter: boolean) => {
+  const handleProjectTouch = (projectId: number, isEnter: boolean) => {
     setActiveProject(isEnter ? projectId : null)
 
-    const branchEl = document.getElementById(`branch-${projectId}`)
+    const branchEl = document.getElementById(`mobile-branch-${projectId}`)
 
     if (branchEl) {
       gsap.to(branchEl, {
@@ -155,31 +154,58 @@ export function JourneyPath({ projects }: JourneyPathProps) {
         >
           {/* Branch line */}
           <div
-            id={`branch-${project.id}`}
-            className={`absolute top-0 h-1 bg-gradient-to-r cursor-pointer transition-all duration-300 ${
+            id={`mobile-branch-${project.id}`}
+            className={`absolute top-0 h-1 bg-gradient-to-r transition-all duration-300 ${
               project.side === "left"
                 ? "right-0 from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-400"
                 : "left-0 from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-400"
             } shadow-[0_0_5px_rgba(147,51,234,0.3)] dark:shadow-[0_0_10px_rgba(168,85,247,0.3)]`}
             style={{
-              width: "120px",
+              width: "60px",
               [project.side === "left" ? "right" : "left"]: "0px",
             }}
-            onMouseEnter={() => handleProjectHover(project.id, true)}
-            onMouseLeave={() => handleProjectHover(project.id, false)}
           />
 
-          {/* Project card */}
+          {/* Project card container with horizontal scroll */}
           <div
-            id={`project-${project.id}`}
-            className={`absolute top-[-80px] ${project.side === "left" ? "right-[140px]" : "left-[140px]"}`}
-            onMouseEnter={() => handleProjectHover(project.id, true)}
-            onMouseLeave={() => handleProjectHover(project.id, false)}
+            className={`absolute top-[-60px] ${
+              project.side === "left" ? "right-[70px]" : "left-[70px]"
+            } max-w-[calc(100vw-100px)] overflow-x-auto pb-4 hide-scrollbar`}
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE/Edge
+            }}
           >
-            <ProjectCard project={project} />
+            {/* Project card */}
+            <div
+              id={`mobile-project-${project.id}`}
+              className="min-w-[220px]"
+              onTouchStart={() => handleProjectTouch(project.id, true)}
+              onTouchEnd={() => handleProjectTouch(project.id, false)}
+            >
+              <MobileProjectCard project={project} />
+            </div>
           </div>
         </div>
       ))}
+
+      {/* Scroll hint */}
+      {showScrollHint && (
+        <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center z-50 animate-pulse">
+          <div className="bg-black/40 dark:bg-white/10 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 text-xs text-white">
+            <ChevronLeft className="h-3 w-3" />
+            <span>Swipe cards to view details</span>
+            <ChevronRight className="h-3 w-3" />
+          </div>
+        </div>
+      )}
+
+      {/* Hide scrollbars */}
+      <style jsx global>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 }
